@@ -1,0 +1,11 @@
+[package]
+edition = "2018"
+name = "zagreus-domain"
+version = "0.1.0"
+
+[dependencies]
+anyhow = "1.0.43"
+chrono = "0.4.19"
+sqlx = {version = "0.5.7", features = ["runtime-actix-native-tls", "postgres", "macros", "uuid", "chrono"]}
+uuid = {version = "0.8.2", features = ["serde", "v4"]}
+zagreus-config = {path = "../zagreus-config"}

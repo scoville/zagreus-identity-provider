@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:13.1-alpine
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_USER=hydra
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=hydra
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+  hydra-migrate:
+    image: oryd/hydra:v1.9.2
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DSN=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+    command: migrate sql -e --yes --config /hydra/hydra.yml
+    volumes:
+      - ./:/hydra
+
+  hydra:
+    image: oryd/hydra:v1.9.2
+    ports:
+      - "4445:4445"
+      - "4444:4444"
+    depends_on:
+      hydra-migrate:
+        condition: service_completed_successfully
+    environment:
+      - CORS_DEBUG=true
+      - SERVE_PUBLIC_CORS_DEBUG=true
+      - DSN=postgres://hydra:secret@postgres:5432/hydra?sslmode=disable
+    command: serve all --dangerous-force-http --config /hydra/hydra.yml
+    volumes:
+      - ./:/hydra

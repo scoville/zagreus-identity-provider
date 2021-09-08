@@ -1,0 +1,34 @@
+serve:
+  public:
+    cors:
+      enabled: true
+      allowed_origins:
+        - http://localhost:8080
+      allowed_methods:
+        - POST
+        - GET
+        - PUT
+        - PATCH
+        - DELETE
+      allowed_headers:
+        - Authorization
+      exposed_headers:
+        - Content-Type
+  cookies:
+    same_site_mode: Lax
+
+urls:
+  self:
+    issuer: http://localhost:4444
+  consent: http://localhost:8080/api/public/consent
+  login: http://localhost:8080/login
+  logout: http://localhost:8080/api/logout
+  post_logout_redirect: http://localhost:8080/login
+
+secrets:
+  system:
+    - youReallyNeedToChangeThis
+
+ttl:
+  access_token: 72h
+  refresh_token: 240h
