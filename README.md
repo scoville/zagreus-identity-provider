@@ -12,10 +12,10 @@ cargo install sqlx-cli
 
 ### Installation
 
-1. Run the [Hydra](https://www.ory.sh/hydra/docs/) instance (necessary each time the docker containers are shut down):
+1. Set up a local postgres database for the idp service and run the [Hydra](https://www.ory.sh/hydra/docs/) instance (necessary each time the docker containers are shut down):
 
 ```
-docker-compose up hydra
+docker-compose up zagreus-postgres hydra
 ```
 
 2. You'll need to setup your database. Zagreus uses [SQLx](https://github.com/launchbadge/sqlx) to handle database management, migrations, and queries.
@@ -33,7 +33,17 @@ cargo build --release
 
 _Building in release mode might take some time, relax and grab some coffee :grin: Dev mode with `cargo check` is much, much faster._
 
-4. Follow the client's instructions or create your own client (see [here](./docs/create-client.md) for more)
+4. If needed, add the built executable to your system's $PATH. Easiest way would be to [symlink the built binary](https://apple.stackexchange.com/a/41586) to one folder that is already in your path, e.g. /usr/local/bin/
+
+```bash
+echo $PATH
+
+sudo ln -s /[full-path-to-the-project-folder]/zagreus-identity-provider/target/debug/zagreus /usr/local/bin/
+```
+
+5. Go to [the client project](https://github.com/scoville/zagreus-identity-provider-ats) and run the zagreus commands to initiate the idp database with a client and run the server.
+
+6. Follow the client's instructions or create your own client (see [here](./docs/create-client.md) for more)
 
 _From that step it's up to the client to elaborate its own building process, but here are some things to know_.
 
