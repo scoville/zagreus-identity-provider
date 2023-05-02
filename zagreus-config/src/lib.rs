@@ -7,6 +7,11 @@ use itconfig::config;
 
 pub static CORS_ALLOWED_METHODS: &[&str] = &["GET", "POST", "PUT"];
 
+// 1. In macros, the :: prefix before the module name tells Rust
+// that we're referring to the top level std module, not some potentially inner std module
+// 2. https://docs.rs/once_cell/latest/once_cell/sync/struct.Lazy.html is much better, we can initialize our vec once
+// and make it available for the whole app. I would question the need for the vec string
+// We can probably just use a [&' static; n] and iter().map(to_owned).collect::<Vec<_>>() when needed
 macro_rules! define_ownable_strings_static {
     (static $global:ident, fn $name:ident, $values:expr) => {
         pub static $global: &[&str] = $values;
